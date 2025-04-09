@@ -1,3 +1,4 @@
+/*
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../model/note.dart';
@@ -19,7 +20,7 @@ class NoteDatabaseHelper {
     final path = join(dbPath, filePath);
     return await openDatabase(
       path,
-      version: 3, // Tăng version từ 2 lên 3
+      version: 4,
       onCreate: _createDB,
       onUpgrade: _upgradeDB,
     );
@@ -34,10 +35,9 @@ class NoteDatabaseHelper {
       priority INTEGER NOT NULL,
       createdAt TEXT NOT NULL,
       modifiedAt TEXT NOT NULL,
-      tags TEXT,
       color TEXT,
       isCompleted INTEGER NOT NULL DEFAULT 0,
-      imagePath TEXT -- Thêm cột imagePath
+      imagePath TEXT
     )
     ''');
   }
@@ -48,6 +48,28 @@ class NoteDatabaseHelper {
     }
     if (oldVersion < 3) {
       await db.execute('ALTER TABLE notes ADD COLUMN imagePath TEXT');
+    }
+    if (oldVersion < 4) {
+      await db.execute('''
+      CREATE TABLE notes_temp (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        content TEXT NOT NULL,
+        priority INTEGER NOT NULL,
+        createdAt TEXT NOT NULL,
+        modifiedAt TEXT NOT NULL,
+        color TEXT,
+        isCompleted INTEGER NOT NULL DEFAULT 0,
+        imagePath TEXT
+      )
+      ''');
+      await db.execute('''
+      INSERT INTO notes_temp (id, title, content, priority, createdAt, modifiedAt, color, isCompleted, imagePath)
+      SELECT id, title, content, priority, createdAt, modifiedAt, color, isCompleted, imagePath
+      FROM notes
+      ''');
+      await db.execute('DROP TABLE notes');
+      await db.execute('ALTER TABLE notes_temp RENAME TO notes');
     }
   }
 
@@ -112,3 +134,4 @@ class NoteDatabaseHelper {
     await db.close();
   }
 }
+*/

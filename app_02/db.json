@@ -1,0 +1,26 @@
+{
+  "notes": [
+    {
+      "title": "adfdasfa",
+      "content": "đsfasfasd\n",
+      "priority": 2,
+      "createdAt": "2025-04-10T19:51:52.452892",
+      "modifiedAt": "2025-04-10T20:07:44.419889",
+      "color": "4db6ac",
+      "isCompleted": 0,
+      "imagePath": null,
+      "id": "2"
+    },
+    {
+      "title": "sdfsdf",
+      "content": "sdfsdfs",
+      "priority": 2,
+      "createdAt": "2025-04-10T19:52:02.023317",
+      "modifiedAt": "2025-04-10T20:07:46.344286",
+      "color": "7986cb",
+      "isCompleted": 0,
+      "imagePath": null,
+      "id": "3"
+    }
+  ]
+}

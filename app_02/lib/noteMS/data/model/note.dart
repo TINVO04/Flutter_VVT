@@ -5,10 +5,9 @@ class Note {
   final int priority;
   final DateTime createdAt;
   final DateTime modifiedAt;
-  final List<String>? tags;
   final String? color;
   final bool isCompleted;
-  final String? imagePath; // Thêm imagePath
+  final String? imagePath;
 
   Note({
     this.id,
@@ -17,39 +16,39 @@ class Note {
     required this.priority,
     required this.createdAt,
     required this.modifiedAt,
-    this.tags,
     this.color,
     this.isCompleted = false,
     this.imagePath,
   });
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
+    final map = {
       'title': title,
       'content': content,
       'priority': priority,
       'createdAt': createdAt.toIso8601String(),
       'modifiedAt': modifiedAt.toIso8601String(),
-      'tags': tags?.join(','),
       'color': color,
       'isCompleted': isCompleted ? 1 : 0,
-      'imagePath': imagePath, // Thêm imagePath vào map
+      'imagePath': imagePath,
     };
+    if (id != null) {
+      map['id'] = id;
+    }
+    return map;
   }
 
   factory Note.fromMap(Map<String, dynamic> map) {
     return Note(
-      id: map['id'] as int?,
+      id: map['id'] is String ? int.tryParse(map['id'] as String) : map['id'] as int?,
       title: map['title'] as String,
       content: map['content'] as String,
       priority: map['priority'] as int,
       createdAt: DateTime.parse(map['createdAt'] as String),
       modifiedAt: DateTime.parse(map['modifiedAt'] as String),
-      tags: map['tags'] != null ? (map['tags'] as String).split(',') : null,
       color: map['color'] as String?,
-      isCompleted: map['isCompleted'] == 1,
-      imagePath: map['imagePath'] as String?, // Lấy imagePath từ map
+      isCompleted: map['isCompleted'] == 1 || map['isCompleted'] == true,
+      imagePath: map['imagePath'] as String?,
     );
   }
 
@@ -60,7 +59,6 @@ class Note {
     int? priority,
     DateTime? createdAt,
     DateTime? modifiedAt,
-    List<String>? tags,
     String? color,
     bool? isCompleted,
     String? imagePath,
@@ -72,15 +70,14 @@ class Note {
       priority: priority ?? this.priority,
       createdAt: createdAt ?? this.createdAt,
       modifiedAt: modifiedAt ?? this.modifiedAt,
-      tags: tags ?? this.tags,
       color: color ?? this.color,
       isCompleted: isCompleted ?? this.isCompleted,
-      imagePath: imagePath ?? this.imagePath, // Thêm imagePath vào copyWith
+      imagePath: imagePath ?? this.imagePath,
     );
   }
 
   @override
   String toString() {
-    return 'Note(id: $id, title: $title, content: $content, priority: $priority, createdAt: $createdAt, modifiedAt: $modifiedAt, tags: $tags, color: $color, isCompleted: $isCompleted, imagePath: $imagePath)';
+    return 'Note(id: $id, title: $title, content: $content, priority: $priority, createdAt: $createdAt, modifiedAt: $modifiedAt, color: $color, isCompleted: $isCompleted, imagePath: $imagePath)';
   }
 }
