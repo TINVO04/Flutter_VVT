@@ -20,9 +20,7 @@ class _NoteFormScreenState extends State<NoteFormScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _titleController;
   late TextEditingController _contentController;
-  late TextEditingController _tagController;
   late int _priority;
-  late List<String> _tags;
   late Color _selectedColor;
   String? _imagePath;
 
@@ -46,9 +44,7 @@ class _NoteFormScreenState extends State<NoteFormScreen> {
     super.initState();
     _titleController = TextEditingController(text: widget.note?.title ?? '');
     _contentController = TextEditingController(text: widget.note?.content ?? '');
-    _tagController = TextEditingController();
     _priority = widget.note?.priority ?? 1;
-    _tags = widget.note?.tags != null ? List.from(widget.note!.tags!) : [];
     _imagePath = widget.note?.imagePath;
   }
 
@@ -66,23 +62,7 @@ class _NoteFormScreenState extends State<NoteFormScreen> {
   void dispose() {
     _titleController.dispose();
     _contentController.dispose();
-    _tagController.dispose();
     super.dispose();
-  }
-
-  void _addTag() {
-    if (_tagController.text.isNotEmpty) {
-      setState(() {
-        _tags.add(_tagController.text.trim());
-        _tagController.clear();
-      });
-    }
-  }
-
-  void _removeTag(String tag) {
-    setState(() {
-      _tags.remove(tag);
-    });
   }
 
   Future<void> _pickImage() async {
@@ -108,7 +88,6 @@ class _NoteFormScreenState extends State<NoteFormScreen> {
 
   void _removeImage() async {
     if (_imagePath != null) {
-      // Xóa file ảnh nếu nó tồn tại
       final file = File(_imagePath!);
       if (await file.exists()) {
         await file.delete();
@@ -130,7 +109,6 @@ class _NoteFormScreenState extends State<NoteFormScreen> {
         priority: _priority,
         createdAt: widget.note?.createdAt ?? now,
         modifiedAt: now,
-        tags: _tags.isNotEmpty ? _tags : null,
         color: _selectedColor.value.toRadixString(16).substring(2),
         isCompleted: widget.note?.isCompleted ?? false,
         imagePath: _imagePath,
@@ -140,7 +118,6 @@ class _NoteFormScreenState extends State<NoteFormScreen> {
         if (widget.note == null) {
           await noteProvider.repository.insertNote(newNote);
         } else {
-          // Nếu đang chỉnh sửa và ảnh cũ bị xóa hoặc thay thế, xóa ảnh cũ
           if (widget.note?.imagePath != null && _imagePath != widget.note?.imagePath) {
             final oldFile = File(widget.note!.imagePath!);
             if (await oldFile.exists()) {
@@ -149,6 +126,7 @@ class _NoteFormScreenState extends State<NoteFormScreen> {
           }
           await noteProvider.repository.updateNote(newNote);
         }
+        await noteProvider.fetchNotes();
         Navigator.pop(context);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -327,33 +305,6 @@ class _NoteFormScreenState extends State<NoteFormScreen> {
                         ],
                       ),
                   ],
-                ),
-                SizedBox(height: 16),
-                Text('Nhãn (Tags)', style: TextStyle(color: theme.textTheme.bodyMedium!.color)),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _tagController,
-                        decoration: InputDecoration(hintText: 'Nhập nhãn...'),
-                        style: TextStyle(color: theme.textTheme.bodyMedium!.color),
-                        onSubmitted: (_) => _addTag(),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.add),
-                      onPressed: _addTag,
-                    ),
-                  ],
-                ),
-                Wrap(
-                  spacing: 8,
-                  children: _tags
-                      .map((tag) => Chip(
-                    label: Text(tag),
-                    onDeleted: () => _removeTag(tag),
-                  ))
-                      .toList(),
                 ),
                 SizedBox(height: 16),
                 ElevatedButton(

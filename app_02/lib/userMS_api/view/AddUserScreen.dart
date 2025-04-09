@@ -1,17 +1,17 @@
 import 'dart:io';
+import 'package:app_02/userMS_api/api/user_api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../api/user_api_service.dart';
-import '../model/user.dart';
+import '../model/User.dart'; // Cập nhật import
 
-class User_Form extends StatefulWidget {
-  const User_Form({super.key});
+class AddUserScreen extends StatefulWidget {
+  const AddUserScreen({super.key});
 
   @override
   State<StatefulWidget> createState() => _FormBasicDemoState();
 }
 
-class _FormBasicDemoState extends State<User_Form> {
+class _FormBasicDemoState extends State<AddUserScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -451,6 +451,7 @@ class _FormBasicDemoState extends State<User_Form> {
                             profileImagePath: _profileImage?.path,
                           );
                           try {
+                            // Gửi dữ liệu lên API, không gửi profileImagePath vì API không lưu file
                             await UserAPIService.instance.insertUser(user.toMap());
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text("Đã thêm ${user.name} thành công!")),

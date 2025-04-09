@@ -124,23 +124,6 @@ class NoteItem extends StatelessWidget {
                       fontSize: 12,
                     ),
                   ),
-                  if (note.tags != null && note.tags!.isNotEmpty) ...[
-                    SizedBox(height: 4),
-                    Wrap(
-                      spacing: 4,
-                      runSpacing: 4,
-                      children: note.tags!.take(3).map((tag) => Chip(
-                        label: Text(
-                          tag,
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: textColor,
-                          ),
-                        ),
-                        backgroundColor: textColor.withOpacity(0.1),
-                      )).toList(),
-                    ),
-                  ],
                 ],
               ),
             ),

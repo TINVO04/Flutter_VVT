@@ -167,25 +167,7 @@ class NoteDetailScreen extends StatelessWidget {
                 style: theme.textTheme.bodySmall,
               ),
               SizedBox(height: 16),
-              if (note.tags != null && note.tags!.isNotEmpty) ...[
-                Text(
-                  'Nhãn:',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: theme.textTheme.bodyMedium!.color,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  children: note.tags!
-                      .map((tag) => Chip(
-                    label: Text(tag),
-                  ))
-                      .toList(),
-                ),
               ],
-            ],
           ),
         ),
       ),

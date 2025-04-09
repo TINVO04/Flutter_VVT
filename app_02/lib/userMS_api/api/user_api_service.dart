@@ -1,14 +1,22 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../model/User.dart'; // Cập nhật import
 
-// Class quản lý API calls
+// Lớp UserAPIService cung cấp các phương thức để tương tác với API quản lý người dùng.
+// Sử dụng HTTP requests để thực hiện các thao tác CRUD (Create, Read, Update, Delete).
 class UserAPIService {
+  // Singleton instance của UserAPIService, đảm bảo chỉ có một instance duy nhất trong ứng dụng.
   static final UserAPIService instance = UserAPIService._init();
-  final String baseUrl = 'https://my-json-server.typicode.com/TINVO04/test_flutter';
 
+  // URL cơ bản của API, nơi lưu trữ dữ liệu người dùng.
+  final String baseUrl = 'https://my-json-server.typicode.com/lenhattung/testflutter';
+
+  // Constructor private để ngăn việc tạo instance từ bên ngoài.
   UserAPIService._init();
 
-  // Create - Thêm user mới
+  // Tạo một người dùng mới trên API.
+  // [user] là Map chứa thông tin người dùng cần tạo.
+  // Trả về ID của người dùng mới nếu thành công, hoặc ném lỗi nếu thất bại.
   Future<int> insertUser(Map<String, dynamic> user) async {
     final response = await http.post(
       Uri.parse('$baseUrl/users'),
@@ -24,7 +32,8 @@ class UserAPIService {
     }
   }
 
-  // Read - Đọc tất cả users
+  // Lấy danh sách tất cả người dùng từ API.
+  // Trả về danh sách các Map chứa thông tin người dùng nếu thành công, hoặc ném lỗi nếu thất bại.
   Future<List<Map<String, dynamic>>> getUsers() async {
     final response = await http.get(Uri.parse('$baseUrl/users'));
 
@@ -36,7 +45,9 @@ class UserAPIService {
     }
   }
 
-  // Read - Đọc user theo id
+  // Lấy thông tin người dùng theo ID.
+  // [id] là ID của người dùng cần lấy.
+  // Trả về Map chứa thông tin người dùng nếu tìm thấy, trả về null nếu không tìm thấy, hoặc ném lỗi nếu thất bại.
   Future<Map<String, dynamic>?> getUserById(int id) async {
     final response = await http.get(Uri.parse('$baseUrl/users/$id'));
 
@@ -49,7 +60,10 @@ class UserAPIService {
     }
   }
 
-  // Update - Cập nhật user
+  // Cập nhật thông tin người dùng trên API.
+  // [id] là ID của người dùng cần cập nhật.
+  // [user] là Map chứa thông tin cần cập nhật.
+  // Trả về 1 nếu thành công (để giống SQLite), hoặc ném lỗi nếu thất bại.
   Future<int> updateUser(int id, Map<String, dynamic> user) async {
     final response = await http.put(
       Uri.parse('$baseUrl/users/$id'),
@@ -64,7 +78,9 @@ class UserAPIService {
     }
   }
 
-  // Delete - Xóa user
+  // Xóa người dùng theo ID.
+  // [id] là ID của người dùng cần xóa.
+  // Trả về 1 nếu thành công (để giống SQLite), hoặc ném lỗi nếu thất bại.
   Future<int> deleteUser(int id) async {
     final response = await http.delete(Uri.parse('$baseUrl/users/$id'));
 
@@ -75,7 +91,7 @@ class UserAPIService {
     }
   }
 
-  // Đóng (giữ lại cho giống cấu trúc DatabaseHelper, nhưng không làm gì)
+  // Phương thức đóng (giữ lại để tương thích với cấu trúc DatabaseHelper, nhưng không làm gì).
   Future close() async {
     // Không cần làm gì vì không dùng SQLite
   }

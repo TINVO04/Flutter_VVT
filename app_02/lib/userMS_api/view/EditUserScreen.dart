@@ -1,20 +1,20 @@
 import 'dart:io';
+import 'package:app_02/userMS_api/api/user_api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../api/user_api_service.dart';
-import '../model/user.dart';
+import '../model/User.dart'; // Cập nhật import
 
-class UserDetailScreen extends StatefulWidget {
+class EditUserScreen extends StatefulWidget {
   final User user;
   final bool isEdit;
 
-  const UserDetailScreen({required this.user, required this.isEdit});
+  const EditUserScreen({super.key, required this.user, required this.isEdit});
 
   @override
-  _UserDetailScreenState createState() => _UserDetailScreenState();
+  _EditUserScreenState createState() => _EditUserScreenState();
 }
 
-class _UserDetailScreenState extends State<UserDetailScreen> {
+class _EditUserScreenState extends State<EditUserScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _birthDateController;
@@ -196,7 +196,6 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
               ),
               if (widget.isEdit) ...[
                 SizedBox(height: 20),
-                // Trong phần ElevatedButton của nút Lưu
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
@@ -212,6 +211,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         profileImagePath: _profileImage?.path,
                       );
                       try {
+                        // Gửi dữ liệu lên API, không gửi profileImagePath vì API không lưu file
                         await UserAPIService.instance.updateUser(widget.user.id!, updatedUser.toMap());
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Đã sửa ${updatedUser.name} thành công!")),

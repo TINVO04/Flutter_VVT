@@ -9,7 +9,9 @@ class NoteProvider with ChangeNotifier {
   bool _isGridView = false;
   bool _isLoading = false;
 
-  NoteProvider(this.repository);
+  NoteProvider(this.repository) {
+    fetchNotes();
+  }
 
   List<Note> get notes => _notes;
   bool get isGridView => _isGridView;
@@ -37,6 +39,8 @@ class NoteProvider with ChangeNotifier {
     } catch (e) {
       print('Lỗi khi tìm kiếm: $e');
       _notes = [];
+
+
     } finally {
       _isLoading = false;
       notifyListeners();
