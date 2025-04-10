@@ -1,20 +1,12 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 import '../model/note.dart';
-
-abstract class NoteRepository {
-  Future<Note> insertNote(Note note);
-  Future<List<Note>> getAllNotes();
-  Future<Note?> getNoteById(int id);
-  Future<int> updateNote(Note note);
-  Future<int> deleteNote(int id);
-  Future<List<Note>> getNotesByPriority(int priority);
-  Future<List<Note>> searchNotes(String query);
-}
+import 'note_repository.dart';
 
 class NoteRepositoryImpl implements NoteRepository {
-  final String baseUrl = 'https://notes-api-zrfp.onrender.com';
-  // static const String baseUrl = 'https://my-json-server.typicode.com/TINVO04/flutter_notes'
+  static const String baseUrl = 'https://my-json-server.typicode.com/TINVO04/test_flutter';
+
+  NoteRepositoryImpl(); // Xóa tham số _dbHelper
 
   @override
   Future<Note> insertNote(Note note) async {
@@ -25,9 +17,11 @@ class NoteRepositoryImpl implements NoteRepository {
         body: jsonEncode(note.toMap()),
       );
       if (response.statusCode == 201) {
-        return Note.fromMap(jsonDecode(response.body));
+        final data = jsonDecode(response.body);
+        return Note.fromMap(data);
+      } else {
+        throw Exception('Lỗi khi thêm ghi chú: ${response.statusCode}');
       }
-      throw Exception('Lỗi khi thêm ghi chú: ${response.statusCode}');
     } catch (e) {
       throw Exception('Lỗi khi thêm ghi chú: $e');
     }
@@ -40,8 +34,9 @@ class NoteRepositoryImpl implements NoteRepository {
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         return data.map((json) => Note.fromMap(json)).toList();
+      } else {
+        throw Exception('Lỗi khi lấy danh sách ghi chú: ${response.statusCode}');
       }
-      throw Exception('Lỗi khi lấy danh sách ghi chú: ${response.statusCode}');
     } catch (e) {
       throw Exception('Lỗi khi lấy danh sách ghi chú: $e');
     }
@@ -52,11 +47,13 @@ class NoteRepositoryImpl implements NoteRepository {
     try {
       final response = await http.get(Uri.parse('$baseUrl/notes/$id'));
       if (response.statusCode == 200) {
-        return Note.fromMap(jsonDecode(response.body));
+        final data = jsonDecode(response.body);
+        return Note.fromMap(data);
       } else if (response.statusCode == 404) {
         return null;
+      } else {
+        throw Exception('Lỗi khi lấy ghi chú theo ID: ${response.statusCode}');
       }
-      throw Exception('Lỗi khi lấy ghi chú theo ID: ${response.statusCode}');
     } catch (e) {
       throw Exception('Lỗi khi lấy ghi chú theo ID: $e');
     }
@@ -71,9 +68,10 @@ class NoteRepositoryImpl implements NoteRepository {
         body: jsonEncode(note.toMap()),
       );
       if (response.statusCode == 200) {
-        return 1;
+        return 1; // Trả về 1 để biểu thị cập nhật thành công
+      } else {
+        throw Exception('Lỗi khi cập nhật ghi chú: ${response.statusCode}');
       }
-      throw Exception('Lỗi khi cập nhật ghi chú: ${response.statusCode}');
     } catch (e) {
       throw Exception('Lỗi khi cập nhật ghi chú: $e');
     }
@@ -84,9 +82,10 @@ class NoteRepositoryImpl implements NoteRepository {
     try {
       final response = await http.delete(Uri.parse('$baseUrl/notes/$id'));
       if (response.statusCode == 200) {
-        return 1;
+        return 1; // Trả về 1 để biểu thị xóa thành công
+      } else {
+        throw Exception('Lỗi khi xóa ghi chú: ${response.statusCode}');
       }
-      throw Exception('Lỗi khi xóa ghi chú: ${response.statusCode}');
     } catch (e) {
       throw Exception('Lỗi khi xóa ghi chú: $e');
     }
@@ -99,8 +98,9 @@ class NoteRepositoryImpl implements NoteRepository {
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         return data.map((json) => Note.fromMap(json)).toList();
+      } else {
+        throw Exception('Lỗi khi lấy ghi chú theo ưu tiên: ${response.statusCode}');
       }
-      throw Exception('Lỗi khi lấy ghi chú theo ưu tiên: ${response.statusCode}');
     } catch (e) {
       throw Exception('Lỗi khi lấy ghi chú theo ưu tiên: $e');
     }
@@ -113,8 +113,9 @@ class NoteRepositoryImpl implements NoteRepository {
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         return data.map((json) => Note.fromMap(json)).toList();
+      } else {
+        throw Exception('Lỗi khi tìm kiếm ghi chú: ${response.statusCode}');
       }
-      throw Exception('Lỗi khi tìm kiếm ghi chú: ${response.statusCode}');
     } catch (e) {
       throw Exception('Lỗi khi tìm kiếm ghi chú: $e');
     }
