@@ -13,7 +13,8 @@ abstract class NoteRepository {
 }
 
 class NoteRepositoryImpl implements NoteRepository {
-  static const String baseUrl = 'http://192.168.100.165:3000';
+  // static const String baseUrl = 'http://192.168.100.165:3000';
+  static const String baseUrl = 'https://my-json-server.typicode.com/TINVO04/flutter_notes';
 
   @override
   Future<Note> insertNote(Note note) async {

@@ -39,6 +39,8 @@ class NoteProvider with ChangeNotifier {
     } catch (e) {
       print('Lỗi khi tìm kiếm: $e');
       _notes = [];
+
+
     } finally {
       _isLoading = false;
       notifyListeners();

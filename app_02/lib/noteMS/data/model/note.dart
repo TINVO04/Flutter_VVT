@@ -22,7 +22,8 @@ class Note {
   });
 
   Map<String, dynamic> toMap() {
-    final map = {
+    return {
+      'id': id,
       'title': title,
       'content': content,
       'priority': priority,
@@ -32,15 +33,11 @@ class Note {
       'isCompleted': isCompleted ? 1 : 0,
       'imagePath': imagePath,
     };
-    if (id != null) {
-      map['id'] = id;
-    }
-    return map;
   }
 
   factory Note.fromMap(Map<String, dynamic> map) {
     return Note(
-      id: map['id'] is String ? int.tryParse(map['id'] as String) : map['id'] as int?,
+      id: map['id'] is String ? int.tryParse(map['id'] as String) : map['id'] as int?, // Xử lý id là String hoặc int
       title: map['title'] as String,
       content: map['content'] as String,
       priority: map['priority'] as int,

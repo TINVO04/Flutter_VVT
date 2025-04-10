@@ -136,6 +136,7 @@ class _NoteFormScreenState extends State<NoteFormScreen> {
           }
           await noteProvider.updateNote(newNote);
         }
+        await noteProvider.fetchNotes();
         Navigator.pop(context);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
