@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../userMS_db/model/Account.dart'; // Cập nhật import
+
+import '../model/account.dart';
 
 // Lớp AccountAPIService cung cấp các phương thức để tương tác với API quản lý tài khoản.
 // Sử dụng HTTP requests để thực hiện các thao tác CRUD (Create, Read, Update, Delete) và các chức năng khác như đăng nhập, đổi mật khẩu, v.v.
