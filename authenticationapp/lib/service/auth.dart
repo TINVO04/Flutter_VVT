@@ -14,36 +14,62 @@ class AuthMethods {
   }
 
   signInWithGoogle(BuildContext context) async {
-    final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-    final GoogleSignIn googleSignIn = GoogleSignIn();
+    try {
+      final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+      final GoogleSignIn googleSignIn = GoogleSignIn();
 
-    final GoogleSignInAccount? googleSignInAccount =
-        await googleSignIn.signIn();
+      final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
 
-    final GoogleSignInAuthentication? googleSignInAuthentication =
-        await googleSignInAccount?.authentication;
+      if (googleSignInAccount == null) {
+        // Người dùng hủy đăng nhập
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            "Google Sign-In cancelled",
+            style: TextStyle(fontSize: 18.0),
+          ),
+        ));
+        return;
+      }
 
-    final AuthCredential credential = GoogleAuthProvider.credential(
-        idToken: googleSignInAuthentication?.idToken,
-        accessToken: googleSignInAuthentication?.accessToken);
+      final GoogleSignInAuthentication? googleSignInAuthentication =
+      await googleSignInAccount.authentication;
 
-    UserCredential result = await firebaseAuth.signInWithCredential(credential);
+      final AuthCredential credential = GoogleAuthProvider.credential(
+          idToken: googleSignInAuthentication?.idToken,
+          accessToken: googleSignInAuthentication?.accessToken);
 
-    User? userDetails = result.user;
+      UserCredential result = await firebaseAuth.signInWithCredential(credential);
 
-    if (result != null) {
-      Map<String, dynamic> userInfoMap = {
-        "email": userDetails!.email,
-        "name": userDetails.displayName,
-        "imgUrl": userDetails.photoURL,
-        "id": userDetails.uid
-      };
-      await DatabaseMethods()
-          .addUser(userDetails.uid, userInfoMap)
-          .then((value) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Home()));
-      });
+      User? userDetails = result.user;
+
+      if (userDetails != null) {
+        Map<String, dynamic> userInfoMap = {
+          "email": userDetails.email,
+          "name": userDetails.displayName,
+          "imgUrl": userDetails.photoURL,
+          "id": userDetails.uid
+        };
+        await DatabaseMethods()
+            .addUser(userDetails.uid, userInfoMap)
+            .then((value) {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => Home()));
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            "Failed to sign in with Google",
+            style: TextStyle(fontSize: 18.0),
+          ),
+        ));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          "Error during Google Sign-In: $e",
+          style: TextStyle(fontSize: 18.0),
+        ),
+      ));
     }
   }
 

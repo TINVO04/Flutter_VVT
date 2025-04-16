@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../model/account.dart';
+import '../model/account_user.dart';
 
 // Lớp AccountAPIService cung cấp các phương thức để tương tác với API quản lý tài khoản.
 // Sử dụng HTTP requests để thực hiện các thao tác CRUD (Create, Read, Update, Delete) và các chức năng khác như đăng nhập, đổi mật khẩu, v.v.
@@ -22,11 +22,11 @@ class AccountAPIService {
     final response = await http.post(
       Uri.parse('$baseUrl/accounts'),
       headers: {'Content-Type': 'application/json'},
-      body: account.toJSON(),
+      body: account.toJson(), // Sửa toJSON thành toJson
     );
 
     if (response.statusCode == 201) {
-      return Account.fromJSON(response.body);
+      return Account.fromJson(response.body); // Đúng cú pháp, không cần sửa
     } else {
       throw Exception('Failed to create account: ${response.statusCode}');
     }

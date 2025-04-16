@@ -17,8 +17,8 @@ class LogIn extends StatefulWidget {
 class _LogInState extends State<LogIn> {
   String email = "", password = "";
 
-  TextEditingController mailcontroller = new TextEditingController();
-  TextEditingController passwordcontroller = new TextEditingController();
+  TextEditingController mailcontroller = TextEditingController();
+  TextEditingController passwordcontroller = TextEditingController();
 
   final _formkey = GlobalKey<FormState>();
 
@@ -59,9 +59,7 @@ class _LogInState extends State<LogIn> {
                   "images/car.PNG",
                   fit: BoxFit.cover,
                 )),
-            SizedBox(
-              height: 30.0,
-            ),
+            SizedBox(height: 30.0),
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 20.0),
               child: Form(
@@ -69,8 +67,7 @@ class _LogInState extends State<LogIn> {
                 child: Column(
                   children: [
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 2.0, horizontal: 30.0),
+                      padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 30.0),
                       decoration: BoxDecoration(
                           color: Color(0xFFedf0f8),
                           borderRadius: BorderRadius.circular(30)),
@@ -89,12 +86,9 @@ class _LogInState extends State<LogIn> {
                                 color: Color(0xFFb2b7bf), fontSize: 18.0)),
                       ),
                     ),
-                    SizedBox(
-                      height: 30.0,
-                    ),
+                    SizedBox(height: 30.0),
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 2.0, horizontal: 30.0),
+                      padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 30.0),
                       decoration: BoxDecoration(
                           color: Color(0xFFedf0f8),
                           borderRadius: BorderRadius.circular(30)),
@@ -111,17 +105,16 @@ class _LogInState extends State<LogIn> {
                             hintText: "Password",
                             hintStyle: TextStyle(
                                 color: Color(0xFFb2b7bf), fontSize: 18.0)),
-                   obscureText: true,   ),
+                        obscureText: true,
+                      ),
                     ),
-                    SizedBox(
-                      height: 30.0,
-                    ),
+                    SizedBox(height: 30.0),
                     GestureDetector(
-                      onTap: (){
-                        if(_formkey.currentState!.validate()){
+                      onTap: () {
+                        if (_formkey.currentState!.validate()) {
                           setState(() {
-                            email= mailcontroller.text;
-                            password=passwordcontroller.text;
+                            email = mailcontroller.text;
+                            password = passwordcontroller.text;
                           });
                         }
                         userLogin();
@@ -135,23 +128,22 @@ class _LogInState extends State<LogIn> {
                               borderRadius: BorderRadius.circular(30)),
                           child: Center(
                               child: Text(
-                            "Sign In",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.w500),
-                          ))),
+                                "Sign In",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22.0,
+                                    fontWeight: FontWeight.w500),
+                              ))),
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(
-              height: 20.0,
-            ),
+            SizedBox(height: 20.0),
             GestureDetector(
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> ForgotPassword()));
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ForgotPassword()));
               },
               child: Text("Forgot Password?",
                   style: TextStyle(
@@ -159,9 +151,7 @@ class _LogInState extends State<LogIn> {
                       fontSize: 18.0,
                       fontWeight: FontWeight.w500)),
             ),
-            SizedBox(
-              height: 40.0,
-            ),
+            SizedBox(height: 40.0),
             Text(
               "or LogIn with",
               style: TextStyle(
@@ -169,14 +159,12 @@ class _LogInState extends State<LogIn> {
                   fontSize: 22.0,
                   fontWeight: FontWeight.w500),
             ),
-            SizedBox(
-              height: 30.0,
-            ),
+            SizedBox(height: 30.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     AuthMethods().signInWithGoogle(context);
                   },
                   child: Image.asset(
@@ -186,11 +174,9 @@ class _LogInState extends State<LogIn> {
                     fit: BoxFit.cover,
                   ),
                 ),
-                SizedBox(
-                  width: 30.0,
-                ),
+                SizedBox(width: 30.0),
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     AuthMethods().signInWithApple();
                   },
                   child: Image.asset(
@@ -202,9 +188,7 @@ class _LogInState extends State<LogIn> {
                 )
               ],
             ),
-            SizedBox(
-              height: 40.0,
-            ),
+            SizedBox(height: 40.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -213,9 +197,7 @@ class _LogInState extends State<LogIn> {
                         color: Color(0xFF8c8e98),
                         fontSize: 18.0,
                         fontWeight: FontWeight.w500)),
-                SizedBox(
-                  width: 5.0,
-                ),
+                SizedBox(width: 5.0),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(context,

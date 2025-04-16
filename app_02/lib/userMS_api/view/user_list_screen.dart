@@ -45,19 +45,41 @@ class _UserListScreenState extends State<UserListScreen> {
           if (widget.onLogout != null)
             IconButton(
               icon: const Icon(Icons.logout),
-              onPressed: () {
-                // Gọi callback onLogout để xóa SharedPreferences
-                widget.onLogout!();
-                // Chuyển về LoginScreen và xóa stack điều hướng
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                      (Route<dynamic> route) => false, // Xóa toàn bộ stack
+              onPressed: () async {
+                // Hiển thị hộp thoại xác nhận đăng xuất
+                final confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text("Xác nhận đăng xuất"),
+                    content: const Text("Bạn có chắc chắn muốn đăng xuất?"),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text("Hủy"),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text("Xác nhận"),
+                      ),
+                    ],
+                  ),
                 );
-                // Hiển thị thông báo đăng xuất thành công
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Đã đăng xuất thành công!")),
-                );
+
+                // Nếu người dùng xác nhận đăng xuất
+                if (confirm == true) {
+                  // Gọi callback onLogout để xóa SharedPreferences
+                  widget.onLogout!();
+                  // Chuyển về LoginScreen và xóa stack điều hướng
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginScreen()),
+                        (Route<dynamic> route) => false, // Xóa toàn bộ stack
+                  );
+                  // Hiển thị thông báo đăng xuất thành công
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Đã đăng xuất thành công!")),
+                  );
+                }
               },
               tooltip: 'Đăng xuất',
             ),
